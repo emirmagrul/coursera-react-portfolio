@@ -33,6 +33,31 @@ const socials = [
 ];
 
 const Header = () => {
+  const headerRef = useRef(null);
+  const prevScrollY = useRef(0);
+
+  useEffect (() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const headerElement = headerRef.current;
+
+      if (!headerElement) {
+        return;
+      }
+      if (currentScrollY > prevScrollY.current) {
+        headerElement.style.transform = "translateY(-200px)";
+      } else {
+        headerElement.style.transform = "translateY(0)";
+      }
+      prevScrollY.current = currentScrollY;
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };  
+  },[]);
+
   const handleClick = (anchor) => () => {
     const id = `${anchor}-section`;
     const element = document.getElementById(id);
@@ -46,6 +71,7 @@ const Header = () => {
 
   return (
     <Box
+      ref={headerRef}
       position="fixed"
       top={0}
       left={0}
